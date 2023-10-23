@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/61bProjects/ArrayDeque/ArrayDeque.iml" filepath="$PROJECT_DIR$/61bProjects/ArrayDeque/ArrayDeque.iml" />
+      <module fileurl="file://$PROJECT_DIR$/61bProjects/AwakeningOfAzototh/AwakeningOfAzototh.iml" filepath="$PROJECT_DIR$/61bProjects/AwakeningOfAzototh/AwakeningOfAzototh.iml" />
+      <module fileurl="file://$PROJECT_DIR$/61bProjects/LinkedListDeque/LinkedListDeque.iml" filepath="$PROJECT_DIR$/61bProjects/LinkedListDeque/LinkedListDeque.iml" />
+      <module fileurl="file://$PROJECT_DIR$/61bProjects/MaxArrayDeque/MaxArrayDeque.iml" filepath="$PROJECT_DIR$/61bProjects/MaxArrayDeque/MaxArrayDeque.iml" />
+      <module fileurl="file://$PROJECT_DIR$/personalprojects.iml" filepath="$PROJECT_DIR$/personalprojects.iml" />
+    </modules>
+  </component>
+</project>
