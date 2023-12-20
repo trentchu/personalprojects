@@ -1,0 +1,186 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+
+
+
+```{r}
+library(R6)
+```
+
+Node Class
+```{r}
+Node <- R6Class("Node",
+  public = list(
+    data = NULL,
+    left = NULL,
+    right = NULL,
+    
+    initialize = function(data = NULL) {
+      self$data <- data
+    }
+  )
+)
+
+```
+
+Deque Implementation
+```{r}
+Deque <- R6Class("Deque",
+  private = list(
+    data = list()
+  ),
+  
+  public = list(
+    
+    push_front = function(item) {
+      private$data <- c(item, private$data)
+    },
+    
+    push_back = function(item) {
+      private$data <- c(private$data, item)
+    },
+    
+    pop_front = function() {
+      if (length(private$data) == 0) return(NULL)
+      item <- private$data[[1]]
+      private$data <- private$data[-1]
+      return(item)
+    },
+    
+    pop_back = function() {
+      if (length(private$data) == 0) return(NULL)
+      item <- private$data[[length(private$data)]]
+      private$data <- private$data[-length(private$data)]
+      return(item)
+    },
+    
+    is_empty = function() {
+      return(length(private$data) == 0)
+    }
+  )
+)
+```
+
+node table
+```{r}
+nodeTable <- list()
+```
+
+table of indices
+```{r}
+indexTable <- data.frame(
+  nodeValue = character(0),
+  startIndex = integer(0),
+  size = integer(0),
+  leftChild = list(),
+  rightChild = list(),
+  stringsAsFactors = FALSE
+)
+
+```
+
+```{r}
+quicksortNodes <- function(data) {
+    # Initialization within the function
+    nodeTable <- list()
+    indexTable <- data.frame(
+        nodeID = integer(0),
+        startIndex = integer(0),
+        size = integer(0),
+        leftChild = integer(0),
+        rightChild = integer(0),
+        stringsAsFactors = FALSE
+    )
+    
+    rootNode <- Node$new(data)
+    nodeDeque <- Deque$new()
+    nodeDeque$push_back(rootNode)
+    nodeID <- 1
+    nodeTable[[nodeID]] <- rootNode
+    indexTable <- rbind(indexTable, data.frame(
+        nodeID = nodeID,
+        startIndex = 1,
+        size = length(rootNode$data),
+        leftChild = NA,
+        rightChild = NA,
+        stringsAsFactors = FALSE
+    ))
+    
+    while (!nodeDeque$is_empty()) {
+        currentNode <- nodeDeque$pop_front()
+        currentData <- currentNode$data
+        
+        if (length(currentData) > 1) {
+            pivot <- currentData[ceiling(length(currentData) / 2)]
+            leftData <- currentData[currentData < pivot]
+            rightData <- currentData[currentData > pivot & currentData != pivot] # Exclude the pivot
+            
+            # Ensure that the partitions are strictly smaller
+            if (length(leftData) < length(currentData) && length(rightData) < length(currentData)) {
+                leftNode <- Node$new(leftData)
+                rightNode <- Node$new(rightData)
+                
+                currentNode$left <- leftNode
+                currentNode$right <- rightNode
+                
+                nodeDeque$push_back(leftNode)
+                nodeDeque$push_back(rightNode)
+                
+                nodeID <- nodeID + 1
+                nodeTable[[nodeID]] <- leftNode
+                indexTable <- rbind(indexTable, data.frame(
+                    nodeID = nodeID,
+                    startIndex = 1,
+                    size = length(leftNode$data),
+                    leftChild = NA,
+                    rightChild = NA,
+                    stringsAsFactors = FALSE
+                ))
+                
+                nodeID <- nodeID + 1
+                nodeTable[[nodeID]] <- rightNode
+                indexTable <- rbind(indexTable, data.frame(
+                    nodeID = nodeID,
+                    startIndex = 1 + length(leftNode$data),
+                    size = length(rightNode$data),
+                    leftChild = NA,
+                    rightChild = NA,
+                    stringsAsFactors = FALSE
+                ))
+            }
+        }
+    }
+    in_order_traversal <- function(node) {
+        if (is.null(node)) return(c())
+        return(c(in_order_traversal(node$left), node$data, in_order_traversal(node$right)))
+    }
+    
+    # Return the sorted data
+    return(in_order_traversal(rootNode))
+}
+
+```
+
+```{r}
+data <- c(5, 3, 8, 4, 2, 7, 1, 6)
+result <- quicksortNodes(data)
+result
+```
+
+
+
+
+
+
+
+
+
+
+
