@@ -59,7 +59,7 @@ Deque <- R6Class("Deque",
       item <- private$data[[length(private$data)]]
       private$data <- private$data[-length(private$data)]
       return(item)
-    },
+    }
     
     is_empty = function() {
       return(length(private$data) == 0)

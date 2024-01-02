@@ -4,28 +4,104 @@ output: html_document
 date: "2023-12-20"
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+Node Structure:
+
+```{r}
+create_node <- function(data, start_index, size) {
+  list(
+    data = data,
+    start_index = start_index,
+    size = size,
+    left = NULL,
+    right = NULL
+  )
+}
+
 ```
 
-## R Markdown
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+Root Table:
+```{r}
+create_root_table <- function() {
+  list()
+}
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+insert_node_to_root_table <- function(table, node) {
+  table[[length(table) + 1]] <- node
+  return(table)
+}
 
-```{r cars}
-summary(cars)
 ```
 
-## Including Plots
 
-You can also embed plots, for example:
+Quicksort Algorithm
+```{r}
+data <- c(...) # Your dataset
+root_node <- create_node(data, 1, length(data))
+root_table <- create_root_table()
+root_table <- insert_node_to_root_table(root_table, root_node)
 
-```{r pressure, echo=FALSE}
-plot(pressure)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+Partitioning
+
+```{r}
+partition <- function(node, pivot_index) {
+  pivot_value <- node$data[pivot_index]
+  left_data <- node$data[node$data < pivot_value]
+  right_data <- node$data[node$data > pivot_value]
+  
+  node$left <- create_node(left_data, node$start_index, length(left_data))
+  node$right <- create_node(right_data, node$start_index + length(left_data) + 1, length(right_data))
+  
+  return(node)
+}
+
+# Example of partitioning the root node
+pivot_index <- sample(node$start_index:(node$start_index + node$size - 1), 1)
+root_node <- partition(root_node, pivot_index)
+
+```
+
+```{r}
+iterative_quicksort <- function(data) {
+  stack <- list()
+  start_index <- 1
+  end_index <- length(data)
+  root_node <- create_node(data, start_index, end_index)
+  stack[[length(stack) + 1]] <- root_node
+  
+  while (length(stack) > 0) {
+    current_node <- stack[[length(stack)]]
+    stack <- stack[-length(stack)]
+    start <- current_node$start_index
+    end <- current_node$end_index
+    
+    if (start < end) {
+      pivot_index <- partition(current_node$data, start, end)
+      
+      # Left partition
+      if (pivot_index - 1 > start) {
+        left_node <- create_node(current_node$data, start, pivot_index - 1)
+        stack[[length(stack) + 1]] <- left_node
+      }
+      
+      # Right partition
+      if (pivot_index + 1 < end) {
+        right_node <- create_node(current_node$data, pivot_index + 1, end)
+        stack[[length(stack) + 1]] <- right_node
+      }
+    }
+  }
+  
+  return(root_node$data)
+}
+
+# Example usage:
+data_to_sort <- c(3, 6, 8, 10, 1, 2, 1)
+sorted_data <- iterative_quicksort(data_to_sort)
+print(sorted_data)
+
+```
 
 
